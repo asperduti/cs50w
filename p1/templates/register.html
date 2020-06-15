@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+    <form action="/register" method="post" id="form_register">
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" id="username" name="username" placeholder="Username" type="text">
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="password" placeholder="Password" type="password">
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="confirmation" placeholder="Password Again" type="password">
+        </div>
+        <button class="btn btn-primary" type="submit" id="btnSubmit">Register</button>
+    </form>
+
+    <script>
+     document.getElementById("form_register").addEventListener("click", function(event){
+         event.preventDefault();
+     })
+     $("#btnSubmit").click( function() {
+         username = $("#username").val()
+         $.getJSON("/check", "username="+username, function(data){
+             if (data) {
+                $("#username").addClass("is-valid")
+                document.getElementById("form_register").submit();
+             }
+             else{
+                $("#username").addClass("is-invalid")
+             }
+         })
+     })
+     $("#username").on("keyup", function() {
+         username = $("#username").val()
+         $.getJSON("/check", "username="+username, function(data){
+             if (data) {
+                $("#username").addClass("is-valid")
+                $("#username").removeClass("is-invalid")
+             }
+             else{
+                $("#username").addClass("is-invalid")
+                $("#username").removeClass("is-valid")
+             }
+         })
+     })
+    </script>
+{% endblock %}

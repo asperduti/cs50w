@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+    <div id="book" class="row">
+        <div class="col">
+            <ul class="list-group">
+                <li class="list-group-item"><strong>ISBN: </strong>{{ book.isbn }}</li>
+                <li class="list-group-item"><strong>Title: </strong>{{ book.title }}</li>
+                <li class="list-group-item"><strong>Author: </strong>{{ book.author }}</li>
+                <li class="list-group-item"><strong>Year: </strong>{{ book.year }}</li>
+                <li class="list-group-item"><strong>Reviews Count: </strong>{{ book.reviews_count }}</li>
+                <li class="list-group-item"><strong>Average Rating: </strong>{{ book.average_rating }}</li>
+            </ul>
+        </div>
+        <div class="col">
+            {% if current_user_review %}
+                <div class="card">
+                    <blockquote class="blockquote mb-0 card-body">
+                        <p>{{ current_user_review.review}}</p>
+                        <footer class="blockquote-footer">
+                            <small class="text-muted">
+                                <cite title="User">You</cite> rated it {{ current_user_review.score }}
+                            </small>
+                        </footer>
+                    </blockquote>
+                </div>
+            {% else %}
+                <form action="{{ url_for('review', isbn=book.isbn) }}" method="post">
+                    <div class="form-group">
+                        <textarea autocomplete="off" autofocus class="form-control" name="review_text"
+                            placeholder="Write your opinion" type="text" id="review_text"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="review_rating">Rating</label>
+                        <select class="form-control" name="review_rating" id="review_rating">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary btn-block" type="submit">Send</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if reviews | length %}
+    <div id="reviews" class="row mt-2">
+        <div class="col-12">
+        <h1>Reviews</h1>
+        </div>
+        <div class="card-columns">
+            {% for review in reviews %}
+            <div class="card p-3">
+                <blockquote class="blockquote mb-0 card-body">
+                    <p>{{ review.review}}</p>
+                    <footer class="blockquote-footer">
+                        <small class="text-muted">
+                            <cite title="User">{{ review.username }}</cite> rated it {{ review.score }}
+                        </small>
+                    </footer>
+                </blockquote>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}
